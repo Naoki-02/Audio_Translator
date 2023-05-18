@@ -1,8 +1,7 @@
 # 指定したファイルを除外
-
 # ルートディレクトリを指定
-/Audio_Translator
+/contents/
 # ディレクトリ以下を除外
 dir/contents/
 # /以外の文字列にマッチ「*」
-/*/*.mp3
+*.mp3
