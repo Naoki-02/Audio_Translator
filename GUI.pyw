@@ -4,8 +4,8 @@ from tkinter import filedialog
 import audio_translator
 import os
 import whisper
-import warnings
-warnings.filterwarnings("ignore", category=UserWarning)
+# import warnings
+# warnings.filterwarnings("ignore", category=UserWarning)
 
 
 adt=audio_translator.audio_translator()
@@ -50,6 +50,18 @@ class Application(tk.Tk):
             command=self.read_button_func
         )
         self.read_button.pack()
+        
+        #保存ボタンの作成と配置
+        self.save_button=tk.Button(
+            self,
+            text='保存',
+            command=self.save_button_func,
+            state=tk.DISABLED# 初期状態では非アクティブ
+        )
+        self.save_button.pack()
+        # 結果とファイルパスを保存するための属性
+        self.result=None
+        self.file_path=None
 
     def read_button_func(self):
         '読み込みボタンが押された時の処理'
@@ -57,17 +69,24 @@ class Application(tk.Tk):
         # ファイルを読み込み
         file_path = file_read()
         if(file_path==0):
-            exit
-        else:    
-            result=adt.transcribe(model,file_path)
-            adt.txtout(result,file_path)
-            if result['language'] != 'ja': 
-                translated=adt.translate(result)
+            return
+           
+        self.file_path=file_path # ファイルパスを保存
+        
+        result=adt.transcribe(model,file_path)
+        self.result=result # 結果を保存
+        
+        if result['language'] != 'ja': 
+            translated=adt.translate(result)
         
 
         # 読み込んだ結果を画面に描画
         self.text_canvas.create_text(300, 200, text=result["text"]+translated)
 
+        # 保存ボタンをアクティブにする
+        self.save_button.config(state=tk.ACTIVE)
+    def save_button_func(self):
+        adt.txtout(self.result,self.file_path)
 
 # GUIアプリ生成
 app = Application()
