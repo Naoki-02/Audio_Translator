@@ -3,7 +3,6 @@
 /contents/
 /__pycache__/
 # ディレクトリ以下を除外
-
 dir/contents/
 # /以外の文字列にマッチ「*」
 *.mp3

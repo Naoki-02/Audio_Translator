@@ -1,22 +1,17 @@
-# -*- coding:utf-8 -*-
 import tkinter as tk
 from tkinter import filedialog
 import audio_translator
 import os
 import whisper
-# import warnings
-# warnings.filterwarnings("ignore", category=UserWarning)
 
+adt = audio_translator.audio_translator()
+model = whisper.load_model("tiny")
 
-adt=audio_translator.audio_translator()
-model=whisper.load_model("tiny")
-#txtfileを読み込むプログラム
 
 def file_read():
-    
     # ファイル選択ダイアログの表示
     file_path = filedialog.askopenfilename()
-    print("ファイル名："+file_path)
+    print("ファイル名：" + file_path)
     if os.path.exists(file_path) != False:
         # ファイルが選択された場合
         print("ファイル存在確認")
@@ -24,7 +19,7 @@ def file_read():
     else:
         # ファイル選択がキャンセルされた場合
         print("ファイルが見つかりません")
-        return 0
+        return None
 
 
 class Application(tk.Tk):
@@ -32,61 +27,79 @@ class Application(tk.Tk):
         super().__init__()
 
         # アプリのタイトル
-        self.title("ファイル読み込み")
+        self.title("Audio_translator")
 
-        # テキスト表示キャンバスの作成と配置
-        self.text_canvas = tk.Canvas(
+        # テキスト表示ウィジェットの作成と配置
+        self.text_widget = tk.Text(
             self,
-            width=600,
-            height=400,
+            width=70,
+            height=10,
             bg="#D0D0D0"
         )
-        self.text_canvas.pack()
+        self.text_widget.pack(padx=10, pady=5)
 
-        # 読み込みボタンの作成と配置
-        self.read_button = tk.Button(
+        # 翻訳結果表示ウィジェットの作成と配置
+        self.translation_widget = tk.Text(
             self,
+            width=70,
+            height=7,
+            bg="#EFEFEF"
+        )
+        self.translation_widget.pack(padx=10, pady=0)
+
+        # 読み込みボタンと保存ボタンの作成と配置
+        self.button_frame = tk.Frame(self)
+        self.button_frame.pack(padx=10, pady=10)
+
+        self.read_button = tk.Button(
+            self.button_frame,
             text='ファイル読み込み',
             command=self.read_button_func
         )
-        self.read_button.pack()
-        
-        #保存ボタンの作成と配置
-        self.save_button=tk.Button(
-            self,
+        self.read_button.pack(side=tk.LEFT)
+
+        self.save_button = tk.Button(
+            self.button_frame,
             text='保存',
             command=self.save_button_func,
-            state=tk.DISABLED# 初期状態では非アクティブ
+            state=tk.DISABLED  # 初期状態では非アクティブ
         )
-        self.save_button.pack()
+        self.save_button.pack(side=tk.LEFT)
+
         # 結果とファイルパスを保存するための属性
-        self.result=None
-        self.file_path=None
+        self.result = None
+        self.file_path = None
 
     def read_button_func(self):
         '読み込みボタンが押された時の処理'
 
         # ファイルを読み込み
         file_path = file_read()
-        if(file_path==0):
+        if file_path is None:
             return
-           
-        self.file_path=file_path # ファイルパスを保存
-        
-        result=adt.transcribe(model,file_path)
-        self.result=result # 結果を保存
-        
-        if result['language'] != 'ja': 
-            translated=adt.translate(result)
-        
 
-        # 読み込んだ結果を画面に描画
-        self.text_canvas.create_text(300, 200, text=result["text"]+translated)
+        self.file_path = file_path  # ファイルパスを保存
+
+        # 初期化
+        self.text_widget.delete("1.0", tk.END)
+        self.translation_widget.delete("1.0", tk.END)
+
+        result = adt.transcribe(model, file_path)
+        self.result = result  # 結果を保存
+
+        if result['language'] != 'ja':
+            translated = adt.translate(result)
+            self.text_widget.insert(tk.END, result["text"])
+            self.translation_widget.insert(tk.END, translated)
+        else:
+            self.text_widget.insert(tk.END, result["text"])
 
         # 保存ボタンをアクティブにする
         self.save_button.config(state=tk.ACTIVE)
+
     def save_button_func(self):
-        adt.txtout(self.result,self.file_path)
+        adt.txtout(self.result, self.file_path)
+
 
 # GUIアプリ生成
 app = Application()
