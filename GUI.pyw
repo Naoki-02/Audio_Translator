@@ -28,6 +28,9 @@ class Application(tk.Tk):
 
         # アプリのタイトル
         self.title("Audio_translator")
+        # ウィンドウの初期サイズ
+        self.geometry("500x300+0+0")
+        
 
         # テキスト表示ウィジェットの作成と配置
         self.text_widget = tk.Text(
@@ -36,7 +39,7 @@ class Application(tk.Tk):
             height=10,
             bg="#D0D0D0"
         )
-        self.text_widget.pack(padx=10, pady=5)
+        self.text_widget.pack(padx=10, pady=5,expand=True,fill='both')
 
         # 翻訳結果表示ウィジェットの作成と配置
         self.translation_widget = tk.Text(
@@ -45,7 +48,7 @@ class Application(tk.Tk):
             height=7,
             bg="#EFEFEF"
         )
-        self.translation_widget.pack(padx=10, pady=0)
+        self.translation_widget.pack(padx=10, pady=0,expand=True,fill='both')
 
         # 読み込みボタンと保存ボタンの作成と配置
         self.button_frame = tk.Frame(self)
