@@ -23,22 +23,3 @@ class audio_translator:
     def transcribe(self,model,path):
         result = model.transcribe(path)
         return result
-
-
-    
-    # if(r==True):
-    #     result=transcribe(model,path)
-        
-    #     save=input()
-    #     #保存するかしないかの処理
-    #     if save == '1':
-    #         txtout(result,path)
-        
-    #     if result['language'] != 'ja': 
-    #         translate(result)
-
-    #     print(result["text"])
-    # else:
-    #     print("ファイルが見つかりません")
-
-

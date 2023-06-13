@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+from tkinterdnd2 import *
 import audio_translator
 import os
 import whisper
@@ -22,15 +23,19 @@ def file_read():
         return None
 
 
-class Application(tk.Tk):
+
+
+class Application(TkinterDnD.Tk):
     def __init__(self):
         super().__init__()
-
         # アプリのタイトル
         self.title("Audio_translator")
         # ウィンドウの初期サイズ
         self.geometry("500x300+0+0")
         
+        self.drop_target_register(DND_FILES)
+        
+        self.dnd_bind('<<Drop>>',self.funcDragAndDrop)
 
         # テキスト表示ウィジェットの作成と配置
         self.text_widget = tk.Text(
@@ -39,6 +44,7 @@ class Application(tk.Tk):
             height=10,
             bg="#D0D0D0"
         )
+        
         self.text_widget.pack(padx=10, pady=5,expand=True,fill='both')
 
         # 翻訳結果表示ウィジェットの作成と配置
@@ -82,7 +88,13 @@ class Application(tk.Tk):
             return
 
         self.file_path = file_path  # ファイルパスを保存
+        
+        self.out_translation_func(file_path)
+        
+        # 保存ボタンをアクティブにする
+        self.save_button.config(state=tk.ACTIVE)
 
+    def out_translation_func(self,file_path):
         # 初期化
         self.text_widget.delete("1.0", tk.END)
         self.translation_widget.delete("1.0", tk.END)
@@ -96,10 +108,12 @@ class Application(tk.Tk):
             self.translation_widget.insert(tk.END, translated)
         else:
             self.text_widget.insert(tk.END, result["text"])
-
-        # 保存ボタンをアクティブにする
-        self.save_button.config(state=tk.ACTIVE)
-
+    
+    def funcDragAndDrop(self, e):
+        file_path=e.data
+        file_path=file_path.strip('{}')
+        self.out_translation_func(file_path)    
+        
     def save_button_func(self):
         adt.txtout(self.result, self.file_path)
 
