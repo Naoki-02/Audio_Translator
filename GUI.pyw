@@ -9,7 +9,7 @@ model = whisper.load_model("tiny")
 
 
 def file_read():
-    # ファイル選択ダイアログの表示
+    # ファイル選択ダイアログ表示
     file_path = filedialog.askopenfilename()
     print("ファイル名：" + file_path)
     if os.path.exists(file_path) != False:
