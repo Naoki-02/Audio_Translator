@@ -79,7 +79,7 @@ class Application(TkinterDnD.Tk):
         # 結果とファイルパスを保存するための属性
         self.result = None
         self.file_path = None
-        # self.translated =None
+        self.translated =None
 
     def read_button_func(self):
         '読み込みボタンが押された時の処理'
@@ -97,6 +97,7 @@ class Application(TkinterDnD.Tk):
 
     def out_translation_func(self):
         # 初期化
+        self.translated=None
         self.text_widget.delete("1.0", tk.END)
         self.translation_widget.delete("1.0", tk.END)
 
@@ -116,11 +117,10 @@ class Application(TkinterDnD.Tk):
     def funcDragAndDrop(self, e):
         self.file_path=e.data
         self.file_path=self.file_path.strip('{}')
-        print("ファイル名:"+self.file_path)
         self.out_translation_func() 
         
     def save_button_func(self):
-        adt.txtout(self.result, self.file_path)
+        adt.txtout(self.result, self.file_path,self.translated)
         
 
 
