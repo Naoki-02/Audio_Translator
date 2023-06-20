@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import messagebox
 from tkinterdnd2 import *
 import audio_translator
 import os
@@ -19,7 +20,7 @@ def file_read():
         return file_path
     else:
         # ファイル選択がキャンセルされた場合
-        print("ファイルが見つかりません")
+        messagebox.showerror("エラー","ファイルが見つかりませんでした")
         return None
 
 
@@ -78,6 +79,7 @@ class Application(TkinterDnD.Tk):
         # 結果とファイルパスを保存するための属性
         self.result = None
         self.file_path = None
+        # self.translated =None
 
     def read_button_func(self):
         '読み込みボタンが押された時の処理'
@@ -89,33 +91,37 @@ class Application(TkinterDnD.Tk):
 
         self.file_path = file_path  # ファイルパスを保存
         
-        self.out_translation_func(file_path)
+        self.out_translation_func()
         
-        # 保存ボタンをアクティブにする
-        self.save_button.config(state=tk.ACTIVE)
+        
 
-    def out_translation_func(self,file_path):
+    def out_translation_func(self):
         # 初期化
         self.text_widget.delete("1.0", tk.END)
         self.translation_widget.delete("1.0", tk.END)
 
-        result = adt.transcribe(model, file_path)
+        result = adt.transcribe(model, self.file_path)
         self.result = result  # 結果を保存
 
         if result['language'] != 'ja':
             translated = adt.translate(result)
+            self.translated=translated
             self.text_widget.insert(tk.END, result["text"])
             self.translation_widget.insert(tk.END, translated)
         else:
             self.text_widget.insert(tk.END, result["text"])
-    
+        # 保存ボタンをアクティブにする
+        self.save_button.config(state=tk.ACTIVE)
+        
     def funcDragAndDrop(self, e):
-        file_path=e.data
-        file_path=file_path.strip('{}')
-        self.out_translation_func(file_path)    
+        self.file_path=e.data
+        self.file_path=self.file_path.strip('{}')
+        print("ファイル名:"+self.file_path)
+        self.out_translation_func() 
         
     def save_button_func(self):
         adt.txtout(self.result, self.file_path)
+        
 
 
 # GUIアプリ生成
