@@ -6,3 +6,4 @@
 dir/contents/
 # /以外の文字列にマッチ「*」
 *.mp3
+*.ini
