@@ -9,4 +9,4 @@ Audio_Translatorは、音声ファイルから文字お越しをするアプリ�
 - Tkinter
 - TkinterDnD2
 - deep_translator
-
+- configparser
