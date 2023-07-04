@@ -14,7 +14,7 @@ class audio_translator:
                 f.write(result["text"])
                 if(trans != None):
                     f.write('\n\n'+trans)
-                messagebox.showinfo("確認","保存しました")
+                messagebox.showinfo("確認","保存しました。")
         except OSError:
             messagebox.showerror("エラー","ファイルを開けませんでした。")
 
