@@ -30,7 +30,6 @@ def dir_read():
     dir_path=filedialog.askdirectory()
     if os.path.exists(dir_path) != False:
         # フォルダが選択された場合
-        print("ファイル存在確認")
         conf.write_ini(dir_path)
         return True
     else:
@@ -132,7 +131,7 @@ class Application(TkinterDnD.Tk):
         self.translated =None
 
     def entry_insert(self):
-        self.dir_Entry.delete(tk.END)
+        self.dir_Entry.delete(0,tk.END)
         self.dir_Entry.insert(tk.END,conf.read_ini())
     
     def read_button_func(self):
