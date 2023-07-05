@@ -131,7 +131,7 @@ class Application(TkinterDnD.Tk):
         self.translated =None
 
     def entry_insert(self):
-        self.dir_Entry.delete(tk.END)
+        self.dir_Entry.delete(0,tk.END)
         self.dir_Entry.insert(tk.END,conf.read_ini())
     
     def read_button_func(self):
