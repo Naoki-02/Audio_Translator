@@ -23,7 +23,7 @@ def file_read():
         return file_path
     else:
         # ファイル選択がキャンセルされた場合
-        messagebox.showerror("エラー","ファイルが見つかりませんでした。")
+        messagebox.showerror("エラー","ファイルが見つかりませんでした")
         return None
     
 def dir_read():
