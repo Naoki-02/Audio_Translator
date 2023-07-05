@@ -7,6 +7,8 @@ import audio_translator
 import Configclass
 import os
 import whisper
+import warnings
+warnings.filterwarnings('ignore')
 
 adt = audio_translator.audio_translator()
 conf=Configclass.config
